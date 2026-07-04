@@ -1,0 +1,79 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: LoginTestData.spec.ts >> Login Test with JSON Data: invalid login @datadriven
+- Location: tests\LoginTestData.spec.ts:17:8
+
+# Error details
+
+```
+Error: locator.textContent: Target page, context or browser has been closed
+Call log:
+  - waiting for getByText(' Warning: No match for E-Mail Address and/or Password.')
+
+```
+
+# Test source
+
+```ts
+  1  | 
+  2  | import{Page,Locator} from '@playwright/test'
+  3  | 
+  4  | export class Loginpage
+  5  | {
+  6  |     private readonly page:Page
+  7  |     private readonly emailAddress:Locator
+  8  |     private readonly loginPassword:Locator
+  9  |     private readonly loginbutton:Locator
+  10 |      private readonly errorMessage:Locator
+  11 | 
+  12 |      constructor(page:Page)
+  13 |      {
+  14 | 
+  15 |         this.page=page;
+  16 |        this.emailAddress = page.locator('#input-email')
+  17 |        this.loginPassword = page.locator('#input-password')
+  18 |        this.loginbutton= page.locator("input[value='Login']")
+  19 |        this.errorMessage=page.getByText(' Warning: No match for E-Mail Address and/or Password.')
+  20 | 
+  21 | 
+  22 | 
+  23 |      }
+  24 |      
+  25 | 
+  26 |      async setEmailaddress(email:string)
+  27 |      {
+  28 |       await  this.emailAddress.fill(email)
+  29 |      }
+  30 | 
+  31 |       async setPassword(password:string)
+  32 |      {
+  33 |       await  this.loginPassword.fill(password)
+  34 |      }
+  35 | 
+  36 |   async clickLogin()
+  37 |      {
+  38 |       await  this.loginbutton.click()
+  39 |      }
+  40 | 
+  41 |      async login(email:string, password:string)
+  42 |      {
+  43 |       await  this.setEmailaddress(email)
+  44 |       await  this.setPassword(password)
+  45 |       await  this.clickLogin()
+  46 |      }
+  47 | async getLoginErrorMsg()
+  48 | {
+> 49 |    return (this.errorMessage.textContent());
+     |                              ^ Error: locator.textContent: Target page, context or browser has been closed
+  50 | }
+  51 | 
+  52 | 
+  53 | 
+  54 | }        
+```
