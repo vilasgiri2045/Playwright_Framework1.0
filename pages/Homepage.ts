@@ -1,46 +1,42 @@
-
-import { th, tr } from '@faker-js/faker';
-import{test,expect,Locator, Page} from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 
 export class Homepage
 {
    
-    private readonly page:Page;
+    private readonly page: Page;
     //locator
-      private readonly myAccountlink:Locator;
-       private readonly  registerlink:Locator; 
-       private readonly login:Locator;
-       private readonly searchobx:Locator;
-       private readonly searchbutton:Locator;
+      private readonly myAccountlink: Locator;
+       private readonly registerlink: Locator; 
+       private readonly login: Locator;
+       private readonly searchBox: Locator;
+       private readonly searchbutton: Locator;
     //constructor
-      constructor(page:Page)
+      constructor(page: Page)
       {
-       this.page=page;
-       this.myAccountlink=page.locator("//span[text()='My Account']");
-       this.registerlink= page.getByRole('link',{name:'Register'});
-        this.login   =  page.getByRole('link',{name:'Login'});
-        this.searchobx= page.locator("input[name='search']");
-        this.searchbutton= page.locator("button[class='btn btn-default btn-lg']")
+       this.page = page;
+       this.myAccountlink = page.getByText('My Account', { exact: true });
+       this.registerlink = page.getByRole('link', { name: 'Register' });
+        this.login   =  page.getByRole('link', { name: 'Login' });
+        this.searchBox = page.locator("input[name='search']");
+        this.searchbutton = page.locator("button[class='btn btn-default btn-lg']")
 
       }
     //action methods
         async ishomepage()
         {
-           let title:string= await this.page.title()
-           if(title)
-           {
-            return true
-           }
-           return false
+           const title: string = await this.page.title();
+           return Boolean(title);
         }
   async clickonmyaccount()
   {
     try{
-       await this.myAccountlink.click();
+       // wait for the element to be visible and stable before interacting
+       await this.myAccountlink.waitFor({ state: 'visible', timeout: 10000 });
+       await this.myAccountlink.click({ timeout: 10000 });
     }
     catch(error)
     {
-        console.log('error is occured...')
+        console.error('clickonmyaccount failed:', error);
         throw error;
     }
   }
@@ -50,23 +46,24 @@ export class Homepage
   {
     try
     {
-      await  this.registerlink.click();
+      await this.registerlink.waitFor({ state: 'visible', timeout: 10000 });
+      await this.registerlink.click({ timeout: 10000 });
     }
     catch(error)
     {
-        console.log('error is occcured');
+        console.error('clickOnRegisterlink failed:', error);
         throw error;
     }
   }
-  async enterproductname(phonename:string)
+  async enterproductname(phonename: string)
   {
 try
 {
-    await this.searchobx.fill('Iphone')
+    await this.searchBox.fill(phonename);
 }
 catch(error)
 {
-    console.log('error is occured')
+    console.error('enterproductname failed:', error);
     throw error;
 }
 
@@ -76,12 +73,14 @@ catch(error)
   {
 try
 {
-    await this.searchbutton.click();
+    await this.searchbutton.waitFor({ state: 'visible', timeout: 10000 });
+    await this.searchbutton.click({ timeout: 10000 });
 
 }
 catch(error)
 {
-    console.log('error is occured')
+    console.error('clicksearchbutton failed:', error);
+    throw error;
 }
     
   }
@@ -90,12 +89,14 @@ catch(error)
   {
 try
 {
-    await this.login.click();
+    await this.login.waitFor({ state: 'visible', timeout: 10000 });
+    await this.login.click({ timeout: 10000 });
 
 }
 catch(error)
 {
-    console.log('error is occured')
+    console.error('clickonLogin failed:', error);
+    throw error;
 }
     
   }
